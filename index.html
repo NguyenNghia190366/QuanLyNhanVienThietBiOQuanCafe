@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Capitalist Cafe Simulator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans h-screen w-screen overflow-hidden select-none">
+  
+  <div id="app" class="w-full h-full relative">
+    <!-- Menu Screen -->
+    <div id="menu-screen" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-800 z-50">
+      <h1 class="text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600 mb-4 text-center drop-shadow-lg tracking-tight">
+        THE CAPITALIST CAFE
+      </h1>
+      <p class="text-xl text-slate-300 mb-12 italic">Trình giả lập Vòng lặp Tư bản</p>
+      
+      <div class="flex gap-8">
+        <button id="btn-part1" class="group relative px-8 py-6 bg-slate-700 hover:bg-slate-600 rounded-2xl shadow-xl transition-all transform hover:-translate-y-2 border-2 border-slate-600 hover:border-emerald-500 overflow-hidden cursor-pointer text-left w-80">
+          <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          <h2 class="text-2xl font-bold text-emerald-400 mb-2">Phần 1</h2>
+          <p class="font-semibold text-slate-200 mb-1">Nghệ thuật Vắt kiệt sức lao động</p>
+          <p class="text-slate-400 text-sm">Khám phá cách tư bản khai thác sức lao động và lợi ích của máy móc nâng cao năng suất.</p>
+        </button>
+        
+        <button id="btn-part2" class="group relative px-8 py-6 bg-slate-700 hover:bg-slate-600 rounded-2xl shadow-xl transition-all transform hover:-translate-y-2 border-2 border-slate-600 hover:border-amber-500 overflow-hidden cursor-pointer text-left w-80">
+          <div class="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          <h2 class="text-2xl font-bold text-amber-400 mb-2">Phần 2</h2>
+          <p class="font-semibold text-slate-200 mb-1">Cá mập & Máy móc</p>
+          <p class="text-slate-400 text-sm">Chiêm ngưỡng sức mạnh của máy móc khấu hao hết và uy lực của quy mô vốn lớn.</p>
+        </button>
+      </div>
+    </div>
+
+    <!-- Game Container (Split Screen) -->
+    <div id="game-container" class="hidden w-full h-full flex">
+      
+      <!-- Left Panel: Control Panel -->
+      <div class="w-1/3 bg-slate-800 border-r border-slate-700 p-6 flex flex-col h-full overflow-y-auto">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-slate-100">Control Panel (CEO)</h2>
+          <button id="btn-back" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-sm cursor-pointer transition-colors">🔙 Menu</button>
+        </div>
+        <hr class="border-slate-700 mb-6">
+        
+        <!-- Part 1 Controls -->
+        <div id="controls-part1" class="hidden flex-col gap-6">
+          <div class="bg-slate-700/50 p-4 rounded-xl border border-slate-600 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
+            <h3 class="text-lg font-semibold text-emerald-400 mb-3 ml-2">Nhân tố 1: Bóc lột sức lao động</h3>
+            
+            <div class="mb-4">
+              <label class="flex justify-between text-sm mb-1 font-medium">
+                <span>Mức lương (v)</span>
+                <span id="wage-val" class="font-mono text-emerald-300">20k/h</span>
+              </label>
+              <input type="range" id="slider-wage" min="15" max="40" value="20" class="w-full accent-emerald-500 cursor-pointer">
+            </div>
+            
+            <div class="mb-4">
+              <label class="flex justify-between text-sm mb-1 font-medium">
+                <span>Số giờ muốn OT</span>
+                <span id="ot-val" class="font-mono text-emerald-300">+0h</span>
+              </label>
+              <input type="range" id="slider-ot" min="0.5" max="4" step="0.5" value="2" class="w-full accent-rose-500 cursor-pointer">
+              <div class="mt-2 flex items-center justify-between">
+                <span class="text-xs text-slate-400" id="ot-status">Cho phép tăng ca (17h-12h)</span>
+                <button id="btn-ot-toggle" class="px-3 py-1 bg-slate-600 hover:bg-rose-600 text-xs rounded transition-colors cursor-pointer font-bold">Chốt OT</button>
+              </div>
+            </div>
+            
+            <div>
+              <label class="flex justify-between text-sm mb-1 font-medium">
+                <span>KPI Cường độ làm việc</span>
+                <span id="kpi-val" class="font-mono text-emerald-300">10 cốc/h</span>
+              </label>
+              <input type="range" id="slider-kpi" min="10" max="30" value="10" class="w-full accent-amber-500 cursor-pointer">
+            </div>
+          </div>
+
+          <div class="bg-slate-700/50 p-4 rounded-xl border border-slate-600 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-1 h-full bg-cyan-500"></div>
+            <h3 class="text-lg font-semibold text-cyan-400 mb-3 ml-2">Nhân tố 2: Nâng cấp Công nghệ</h3>
+            <div class="flex flex-col gap-3">
+              <button id="btn-tech-1" class="tech-btn flex items-center p-3 rounded-lg border-2 border-cyan-500 bg-slate-800 transition-colors" data-level="1" data-price="0">
+                <img src="/assets/machine1.png" class="w-12 h-12 mr-3 object-contain bg-slate-700 rounded-md p-1">
+                <div class="text-left">
+                  <div class="font-bold text-sm">Phin Cafe (Cấp 1)</div>
+                  <div class="text-xs text-cyan-400">Đang sử dụng</div>
+                </div>
+              </button>
+              <button id="btn-tech-2" class="tech-btn flex items-center p-3 rounded-lg border-2 border-slate-600 hover:border-cyan-500/50 bg-slate-800 hover:bg-slate-700 transition-colors cursor-pointer group" data-level="2" data-price="50">
+                <img src="/assets/machine2.png" class="w-12 h-12 mr-3 object-contain bg-slate-700 rounded-md p-1 group-hover:scale-110 transition-transform">
+                <div class="text-left flex-1">
+                  <div class="font-bold text-sm">Máy Espresso (Cấp 2)</div>
+                  <div class="text-xs text-slate-400">Mua: <span class="text-amber-400 font-bold">50 Triệu</span></div>
+                </div>
+              </button>
+              <button id="btn-tech-3" class="tech-btn flex items-center p-3 rounded-lg border-2 border-slate-600 hover:border-cyan-500/50 bg-slate-800 hover:bg-slate-700 transition-colors cursor-pointer group" data-level="3" data-price="200">
+                <img src="/assets/machine3.png" class="w-12 h-12 mr-3 object-contain bg-slate-700 rounded-md p-1 group-hover:scale-110 transition-transform">
+                <div class="text-left flex-1">
+                  <div class="font-bold text-sm">Robot Pha Chế (Cấp 3)</div>
+                  <div class="text-xs text-slate-400">Mua: <span class="text-amber-400 font-bold">200 Triệu</span></div>
+                </div>
+              </button>
+            </div>
+            <p class="text-xs text-slate-400 mt-3 text-center italic">*Nâng cấp giúp pha nhanh hơn, hạ thấp giá trị sức lao động.</p>
+          </div>
+        </div>
+
+        <!-- Part 2 Controls -->
+        <div id="controls-part2" class="hidden flex-col gap-6">
+          <div class="bg-slate-700/50 p-4 rounded-xl border border-slate-600 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-1 h-full bg-rose-500"></div>
+            <h3 class="text-lg font-semibold text-rose-400 mb-3 ml-2">Nhân tố 4: Quy mô Vốn Ứng Trước</h3>
+            <div class="flex flex-col gap-3">
+              <label class="flex items-center p-3 border-2 border-rose-500 bg-slate-800 rounded-lg cursor-pointer transition-colors" id="label-cap-small">
+                <input type="radio" name="capital" value="small" class="mr-3 w-5 h-5 accent-rose-500" checked>
+                <div>
+                  <div class="font-bold text-rose-400">Quán Cá Con</div>
+                  <div class="text-xs text-slate-300">Vốn ứng trước: 20 Triệu VNĐ</div>
+                </div>
+              </label>
+              <label class="flex items-center p-3 border-2 border-slate-600 bg-slate-800 rounded-lg cursor-pointer hover:border-emerald-500/50 transition-colors" id="label-cap-big">
+                <input type="radio" name="capital" value="big" class="mr-3 w-5 h-5 accent-emerald-500">
+                <div>
+                  <div class="font-bold text-emerald-400">Chuỗi Cá Mập</div>
+                  <div class="text-xs text-slate-300">Vốn ứng trước: 2 Tỷ VNĐ</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          
+          <div class="bg-slate-700/50 p-4 rounded-xl border border-slate-600 relative overflow-hidden flex-1">
+            <div class="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
+            <h3 class="text-lg font-semibold text-amber-400 mb-3 ml-2">Tài sản cố định (Máy móc)</h3>
+            <div id="asset-list" class="flex flex-col gap-3">
+              <!-- Dynamically populated -->
+              <div class="text-sm text-slate-400 text-center py-4 italic">Đang tải tài sản...</div>
+            </div>
+          </div>
+
+          <div class="bg-slate-700/50 p-4 rounded-xl border border-slate-600">
+            <h3 class="text-lg font-semibold text-purple-400 mb-3">Điều Khiển Thời Gian</h3>
+            <div class="flex gap-3">
+              <button id="btn-start-month" class="flex-1 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg font-bold transition-colors cursor-pointer shadow-lg shadow-purple-900/50 flex flex-col items-center justify-center">
+                <span class="text-lg">▶ PLAY</span>
+                <span class="text-xs text-purple-200 font-normal">Chạy 1 tháng</span>
+              </button>
+              <button id="btn-fast-forward" class="flex-1 py-3 bg-slate-600 hover:bg-slate-500 rounded-lg font-bold transition-colors cursor-pointer shadow-lg flex flex-col items-center justify-center">
+                <span class="text-lg">⏩ TUA</span>
+                <span class="text-xs text-slate-300 font-normal">Chạy 12 tháng</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      
+      <!-- Right Panel: Data Visualization -->
+      <div class="w-2/3 relative bg-slate-900 flex flex-col p-8 overflow-y-auto">
+        <div id="clock-display" class="absolute top-6 right-8 font-mono text-xl text-emerald-400 border border-slate-700 px-4 py-2 rounded-lg bg-slate-800 shadow-lg font-bold flex items-center gap-2">
+          <span>🕒</span> <span id="clock-text">Ngày 1 - 09:00</span>
+        </div>
+        
+        <h2 id="viz-title" class="text-3xl font-extrabold text-slate-100 mb-8 mt-2 drop-shadow-md">Data Visualization</h2>
+
+        <!-- Part 1 Viz -->
+        <div id="viz-part1" class="hidden flex-col gap-6 flex-1">
+          <!-- Animation Area -->
+          <div class="relative bg-slate-800 rounded-2xl h-72 border border-slate-700 overflow-hidden flex justify-center items-end pb-4 shadow-xl">
+            <!-- Background element -->
+            <div class="absolute inset-0 opacity-20 bg-gradient-to-t from-slate-900 to-transparent z-0"></div>
+            <!-- Characters -->
+            <div class="relative z-10 flex items-end gap-12">
+              <div class="flex flex-col items-center relative">
+                <!-- Sweat drops for burnout -->
+                <div id="anim-sweat" class="absolute -top-4 right-0 text-xl opacity-0 transition-opacity">💧</div>
+                <img src="/assets/worker.png" class="w-40 h-40 object-contain drop-shadow-2xl transition-transform duration-300" id="anim-worker">
+                <div class="mt-2 text-sm font-bold bg-slate-700 px-3 py-1 rounded-full border border-slate-600">Nhân viên Barista</div>
+              </div>
+              <div class="flex flex-col items-center relative">
+                <img src="/assets/machine1.png" class="w-40 h-40 object-contain drop-shadow-2xl transition-all duration-500" id="anim-machine">
+                <div id="machine-label" class="mt-2 text-sm font-bold bg-slate-700 px-3 py-1 rounded-full border border-slate-600 text-cyan-400">Phin Cấp 1</div>
+              </div>
+            </div>
+            <!-- Scoreboard -->
+            <div class="absolute top-4 left-4 bg-slate-900/80 border border-slate-600 rounded-lg p-3 flex gap-6 z-20 shadow-lg backdrop-blur-sm">
+              <div>
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-wider">Lương Nhân Viên</div>
+                <div id="score-wage" class="text-xl font-bold text-rose-400">0 VNĐ</div>
+              </div>
+              <div class="w-px bg-slate-700"></div>
+              <div>
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-wider">Lợi Nhuận Tư Bản</div>
+                <div id="score-profit" class="text-xl font-bold text-emerald-400">0 VNĐ</div>
+              </div>
+            </div>
+            <!-- Alert message area -->
+            <div id="alert-msg" class="absolute top-20 left-1/2 -translate-x-1/2 px-4 py-2 bg-rose-500 text-white rounded-lg font-bold opacity-0 transition-opacity transform -translate-y-4 shadow-lg z-30">
+              Nhân viên kiệt sức! Quán tạm đóng cửa.
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-5 gap-6">
+            <!-- Progress Bar m' -->
+            <div class="col-span-3 bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-xl relative overflow-hidden flex flex-col justify-center">
+              <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-bl-full"></div>
+              <h4 class="text-xl font-bold mb-6 flex justify-between items-center relative z-10">
+                <span>Tỷ suất Thặng dư (m')</span>
+                <span id="m-prime-val" class="text-3xl text-emerald-400 font-extrabold drop-shadow">100%</span>
+              </h4>
+              <div class="relative w-full h-10 bg-slate-700 rounded-full overflow-hidden flex shadow-inner border border-slate-600 z-10">
+                <div id="bar-v" class="h-full bg-gradient-to-r from-rose-600 to-rose-400 flex items-center justify-center text-sm font-bold shadow-lg transition-all duration-500 ease-out" style="width: 50%">Thời gian lao động tất yếu (v)</div>
+                <div id="bar-m" class="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 flex items-center justify-center text-sm font-bold shadow-lg transition-all duration-500 ease-out" style="width: 50%">Thời gian lao động thặng dư (m)</div>
+              </div>
+              <div class="flex justify-between mt-3 px-2 text-xs font-bold text-slate-400 z-10">
+                <span id="v-hours-desc">Làm 4h để bù tiền lương</span>
+                <span id="m-hours-desc" class="text-emerald-500">Làm 4h không công tạo thặng dư</span>
+              </div>
+            </div>
+            
+            <!-- Burnout Meter -->
+            <div class="col-span-2 bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-xl flex flex-col items-center justify-center relative overflow-hidden">
+              <h4 class="text-lg font-bold mb-4 text-center">Tỷ lệ Kiệt sức<br>(Burnout Rate)</h4>
+              <div class="relative w-48 h-24 overflow-hidden mt-2">
+                <!-- Gauge Background -->
+                <div class="absolute w-full h-full bg-slate-700 rounded-t-full border-b-0 border-4 border-slate-800"></div>
+                <!-- Gradient Fill -->
+                <div class="absolute w-full h-full bg-gradient-to-r from-emerald-400 via-amber-400 to-rose-600 rounded-t-full border-b-0 origin-bottom transition-transform duration-700 ease-out" style="transform: rotate(180deg); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); z-index: 1;"></div>
+                <!-- Cover -->
+                <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-40 h-20 bg-slate-800 rounded-t-full z-10"></div>
+                <!-- Needle -->
+                <div id="burnout-needle" class="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-20 origin-bottom transition-transform duration-500 ease-out z-20" style="transform: rotate(-90deg)">
+                  <div class="w-full h-1/2 bg-slate-200 rounded-full shadow-lg"></div>
+                </div>
+                <!-- Center Dot -->
+                <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-6 bg-slate-100 rounded-full shadow-xl z-30 translate-y-1/2"></div>
+              </div>
+              <div id="burnout-val" class="text-xl font-bold mt-6 text-emerald-400 bg-slate-900 px-4 py-1 rounded-lg border border-slate-700">0% (Vui vẻ)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Part 2 Viz -->
+        <div id="viz-part2" class="hidden flex-col gap-6 flex-1 h-full">
+          <!-- Depreciation Ledger -->
+          <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-xl relative overflow-hidden h-64 flex flex-col">
+            <h4 class="text-xl font-bold mb-4 flex justify-between items-center z-10">
+              <span>Nhân tố 3: Bảng Khấu Hao Máy Móc</span>
+              <span id="month-val" class="text-amber-400 font-mono text-xl border-2 border-amber-500 px-4 py-1 rounded-lg bg-amber-500/10 shadow-[0_0_15px_rgba(245,158,11,0.2)]">Tháng 0</span>
+            </h4>
+            <div id="depreciation-bars" class="space-y-6 flex-1 overflow-y-auto z-10 px-2">
+              <!-- Dynamically added progress bars -->
+              <div class="flex items-center justify-center h-full">
+                <div class="text-center text-slate-500 italic bg-slate-900/50 px-6 py-4 rounded-xl border border-slate-700">Hãy chọn máy móc ở Menu để hiển thị tiến trình khấu hao.</div>
+              </div>
+            </div>
+            
+            <!-- Confetti/Gold overlay for free labor -->
+            <div id="free-labor-anim" class="absolute inset-0 pointer-events-none z-0 opacity-0 transition-opacity duration-1000 bg-gradient-to-t from-amber-500/20 to-transparent">
+              <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-4xl font-black glow-text whitespace-nowrap opacity-20 rotate-[-10deg]">LỰC LƯỢNG PHỤC VỤ KHÔNG CÔNG</div>
+            </div>
+          </div>
+
+          <!-- Compound Growth Chart -->
+          <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-xl flex-1 flex flex-col relative">
+            <h4 class="text-xl font-bold mb-2 z-10 flex justify-between items-end">
+              <span>Quỹ Tích Lũy Tư Bản</span>
+              <span class="text-sm font-normal text-slate-400">Đơn vị: Triệu VNĐ</span>
+            </h4>
+            <div class="absolute top-6 right-6 flex items-center gap-4 z-10">
+               <div class="flex items-center gap-2"><span class="w-3 h-3 bg-rose-500 rounded-full block"></span><span class="text-xs text-slate-300">Quán Nhỏ (20Tr)</span></div>
+               <div class="flex items-center gap-2"><span class="w-3 h-3 bg-emerald-500 rounded-full block"></span><span class="text-xs text-slate-300">Chuỗi Lớn (2 Tỷ)</span></div>
+            </div>
+            <div class="flex-1 relative w-full h-full mt-4">
+              <canvas id="accumulationChart"></canvas>
+            </div>
+            <div class="mt-4 text-center text-sm text-slate-400 italic bg-slate-900/50 p-2 rounded border border-slate-700">
+              *Biểu đồ chứng minh: Cùng tỷ suất bóc lột m', quy mô tư bản ban đầu càng lớn thì tốc độ tích lũy càng vọt lên theo cấp số nhân (hiệu ứng lãi kép).
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  
+  <script type="module" src="/main.js"></script>
+</body>
+</html>
