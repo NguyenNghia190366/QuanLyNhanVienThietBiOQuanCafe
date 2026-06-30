@@ -3,38 +3,29 @@ import Chart from 'chart.js/auto';
 let chartInstance = null;
 let ctx = null;
 
-export function initChart() {
+export function initChart(companies) {
   ctx = document.getElementById('accumulationChart');
-  if (!ctx) return;
+  if (!ctx || !companies) return;
   
   if (chartInstance) {
     chartInstance.destroy();
   }
   
+  let datasets = companies.map(c => ({
+    label: c.name,
+    data: [c.capital],
+    borderColor: c.color,
+    backgroundColor: c.color + '20',
+    borderWidth: 3,
+    tension: 0.4,
+    fill: true
+  }));
+  
   chartInstance = new Chart(ctx, {
     type: 'line',
     data: {
       labels: [0],
-      datasets: [
-        {
-          label: 'Quán Nhỏ (20Tr)',
-          data: [20],
-          borderColor: '#f43f5e',
-          backgroundColor: '#f43f5e20',
-          borderWidth: 3,
-          tension: 0.4,
-          fill: true
-        },
-        {
-          label: 'Chuỗi Lớn (2 Tỷ)',
-          data: [2000],
-          borderColor: '#10b981',
-          backgroundColor: '#10b98120',
-          borderWidth: 3,
-          tension: 0.4,
-          fill: true
-        }
-      ]
+      datasets: datasets
     },
     options: {
       responsive: true,
@@ -69,11 +60,14 @@ export function initChart() {
   });
 }
 
-export function updateChart(month, smallCapVal, bigCapVal) {
+export function updateChart(month, valuesArray) {
   if(!chartInstance) return;
   
   chartInstance.data.labels.push(month);
-  chartInstance.data.datasets[0].data.push(smallCapVal);
-  chartInstance.data.datasets[1].data.push(bigCapVal);
+  for(let i = 0; i < valuesArray.length; i++) {
+    if(chartInstance.data.datasets[i]) {
+      chartInstance.data.datasets[i].data.push(valuesArray[i]);
+    }
+  }
   chartInstance.update();
 }
